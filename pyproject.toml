@@ -1,0 +1,10 @@
+[project]
+name = "tower"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "python-osc>=1.9.3",
+    "pyserial>=3.5",
+]
