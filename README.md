@@ -1,3 +1,89 @@
+# Tower: Pont Arduino vers OSC
+
+Ce projet fournit un pont entre un récepteur LoRa basé sur Arduino et un client OSC (Open Sound Control), permettant de déclencher des événements OSC à partir d'un appui sur un bouton physique d'un dispositif Arduino à distance.
+
+## Vue d'ensemble
+
+- **Arduino Émetteur**: Lorsqu'un bouton est pressé, envoie un message LoRa et allume une LED.
+- **Arduino Récepteur**: Écoute les messages LoRa, allume une barre de LED et imprime `TOWER_ON` sur le port série quand un message est reçu.
+- **Pont Python (`main.py`)**: Écoute la sortie série de l'Arduino récepteur et émet un message OSC (`/light/tower on`) vers un serveur OSC local.
+
+## Exigences Logicielles
+
+- Python 3.10+
+- [pyserial](https://pypi.org/project/pyserial/)
+- [python-osc](https://pypi.org/project/python-osc/)
+
+Installer les dépendances :
+
+```bash
+# Utiliser uv (recommandé)
+uv sync
+
+# Ou utiliser pip
+pip install -r requirements.txt
+```
+
+## Installation et Configuration
+
+### 1. Configuration Arduino
+
+1. **Téléverser le code émetteur** sur votre premier Arduino :
+   ```bash
+   # Ouvrir arduino/emitter_tower.ino dans Arduino IDE
+   # Sélectionner votre carte et port, puis téléverser
+   ```
+
+2. **Téléverser le code récepteur** sur votre deuxième Arduino :
+   ```bash
+   # Ouvrir arduino/receiver_tower.ino dans Arduino IDE
+   # Sélectionner votre carte et port, puis téléverser
+   ```
+
+### 2. Connexions Matérielles
+
+**Arduino Émetteur :**
+- Connecter le bouton double Grove à D2
+- Connecter la LED Grove enchaînable à D7
+- Connecter le module Grove LoRa à UART (broches TX/RX)
+
+**Arduino Récepteur :**
+- Connecter la barre de LED Grove à D7
+- Connecter le module Grove LoRa à UART (broches TX/RX)
+
+### 3. Configuration du Pont Python
+
+Le pont Python détecte automatiquement le port série de votre Arduino, donc aucune configuration manuelle n'est nécessaire.
+
+## Utilisation
+
+### Démarrer le Pont
+
+1. **Connecter votre Arduino récepteur** à votre ordinateur via USB
+2. **Exécuter le pont Python** :
+   ```bash
+   python main.py
+   ```
+
+3. **Démarrer votre serveur OSC** (ex: dans votre logiciel de contrôle d'éclairage) sur le port 8000
+
+### Tester le Système
+
+1. **Appuyer sur le bouton** de l'Arduino émetteur
+2. **Observer l'Arduino récepteur** - la barre de LED devrait s'allumer
+3. **Vérifier la console Python** - vous devriez voir "OSC event sent: /light/tower on"
+4. **Vérifier votre serveur OSC** reçoit le message `/light/tower on`
+
+## Fonctionnalités
+
+- **Détection Dynamique de Port** : Trouve automatiquement les ports série Arduino sur différents systèmes d'exploitation
+- **Multi-Plateforme** : Fonctionne sur macOS, Linux et Windows
+- **Gestion d'Erreurs** : Gestion gracieuse des problèmes de connexion et déconnexions
+- **Communication en Temps Réel** : Transmission de messages OSC à faible latence
+- **Retour Matériel** : Indicateurs LED visuels sur les deux dispositifs Arduino
+
+---
+
 # Tower: Arduino to OSC Bridge
 
 This project provides a bridge between an Arduino-based LoRa receiver and an OSC (Open Sound Control) client, allowing you to trigger OSC events from a physical button press on an Arduino device.
